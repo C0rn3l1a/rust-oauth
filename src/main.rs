@@ -10,6 +10,8 @@ use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 use tracing_subscriber::{filter, EnvFilter, Layer};
 
+mod auth;
+
 #[tokio::main]
 async fn main() {
     dotenv().ok();
@@ -19,7 +21,8 @@ async fn main() {
 
     // Basic Routes
     let app = Router::new()
-        .route("/", get(health));
+        .route("/", get(health))
+        .nest("/auth", auth::routes());
 
     // define listener
     let port = env::var("PORT")
